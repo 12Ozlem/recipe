@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,33 +16,37 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.recipe.demo.model.enumaration.Diffuculty;
+
 @Entity
 public class Recipe {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 	
 	@Lob
-	String description;
-	Integer prepTime;
-	Integer cookTime;
-	Integer servings;
+	private String description;
+	private Integer prepTime;
+	private Integer cookTime;
+	private Integer servings;
 	@Lob
-	String source;
-	String url;
-	String directions;
-	//Diffuculty diffuculty;
+	private String source;
+	private String url;
+	private String directions;
+	
+	@Enumerated(value=EnumType.STRING)
+	private Diffuculty diffuculty;
 	
 	@Lob
-	Byte[] image;
+	private Byte[] image;
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy= "recipe",
 			fetch=FetchType.LAZY)
-	Set <Ingredient> ingredients;
+	private Set <Ingredient> ingredients;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	Notes notes;
+	private Notes notes;
 	
 
 	public Recipe() {
@@ -58,7 +64,7 @@ public class Recipe {
 		this.source = source;
 		this.url = url;
 		this.directions = directions;
-		//this.diffuculty = diffuculty;
+		this.diffuculty = diffuculty;
 		this.image = image;
 		this.ingredients = ingredients;
 		this.notes = notes;
@@ -127,14 +133,14 @@ public class Recipe {
 	public void setDirections(String directions) {
 		this.directions = directions;
 	}
-    /*
+	
 	public Diffuculty getDiffuculty() {
 		return diffuculty;
 	}
 
 	public void setDiffuculty(Diffuculty diffuculty) {
 		this.diffuculty = diffuculty;
-	} */
+	} 
 
 	public Byte[] getImage() {
 		return image;

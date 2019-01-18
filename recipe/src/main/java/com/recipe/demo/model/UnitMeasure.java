@@ -12,12 +12,12 @@ public class UnitMeasure {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 	
-	String uom;
+	private String uom;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	Ingredient ingredient;
+	private Ingredient ingredient;
 
 	public UnitMeasure() {
 

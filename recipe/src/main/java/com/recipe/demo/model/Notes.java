@@ -14,16 +14,14 @@ public class Notes {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 	
 	@Lob
-	String notes;
+	private String notes;
 	
 	@OneToOne(fetch=FetchType.EAGER)
-	Recipe recipe;
+	private Recipe recipe;
 	
-	
-
 	public Notes() {
 
 	}
