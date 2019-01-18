@@ -1,6 +1,7 @@
 package com.recipe.demo.model;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,6 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -43,10 +46,16 @@ public class Recipe {
 	
 	@OneToMany(cascade=CascadeType.ALL, mappedBy= "recipe",
 			fetch=FetchType.LAZY)
-	private Set <Ingredient> ingredients;
+	private Set <Ingredient> ingredients = new HashSet<>();
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Notes notes;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "recipe_category",
+			joinColumns= {@JoinColumn(name="recipe_id")},
+			inverseJoinColumns= {@JoinColumn(name="category_id")})
+	private Set <Category> categories = new HashSet<>();
 	
 
 	public Recipe() {
@@ -166,13 +175,20 @@ public class Recipe {
 		this.notes = notes;
 	}
 
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
 	@Override
 	public String toString() {
 		return "Recipe [id=" + id + ", description=" + description + ", prepTime=" + prepTime + ", cookTime=" + cookTime
 				+ ", servings=" + servings + ", source=" + source + ", url=" + url + ", directions=" + directions
-				+ ", image=" + Arrays.toString(image) + ", ingredients=" + ingredients
-				+ ", notes=" + notes + "]";
+				+ ", diffuculty=" + diffuculty + ", image=" + Arrays.toString(image) + ", ingredients=" + ingredients
+				+ ", notes=" + notes + ", categories=" + categories + "]";
 	}
 		
-
 }
