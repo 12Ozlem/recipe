@@ -18,16 +18,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
 import com.recipe.demo.model.enumaration.Diffuculty;
 
 @Entity
-public class Recipe {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
+public class Recipe extends BaseEntity {
+
 	@Lob
 	private String description;
 	private Integer prepTime;
@@ -37,35 +32,33 @@ public class Recipe {
 	private String source;
 	private String url;
 	private String directions;
-	
-	@Enumerated(value=EnumType.STRING)
+
+	@Enumerated(value = EnumType.STRING)
 	private Diffuculty diffuculty;
-	
+
 	@Lob
 	private Byte[] image;
-	
-	@OneToMany(cascade=CascadeType.ALL, mappedBy= "recipe",
-			fetch=FetchType.LAZY)
-	private Set <Ingredient> ingredients = new HashSet<>();
-	
-	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+
+	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH }, mappedBy = "recipe", fetch = FetchType.EAGER)
+	private Set<Ingredient> ingredients = new HashSet<>();
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "notes_id")
 	private Notes notes;
-	
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(name = "recipe_category",
-			joinColumns= {@JoinColumn(name="recipe_id")},
-			inverseJoinColumns= {@JoinColumn(name="category_id")})
-	private Set <Category> categories = new HashSet<>();
-	
+
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH })
+	@JoinTable(name = "recipe_category", joinColumns = { @JoinColumn(name = "recipe_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "category_id") })
+	private Set<Category> categories = new HashSet<>();
 
 	public Recipe() {
-
 	}
 
-	public Recipe(String description, Integer prepTime, Integer cookTime, Integer servings, String source,
-			String url, String directions, Diffuculty diffuculty, Byte[] image, Set<Ingredient> ingredients,
-			Notes notes) {
-		
+	public Recipe(String description, Integer prepTime, Integer cookTime, Integer servings, String source, String url,
+			String directions, Diffuculty diffuculty, Byte[] image, Set<Ingredient> ingredients, Notes notes,
+			Set<Category> categories) {
 		this.description = description;
 		this.prepTime = prepTime;
 		this.cookTime = cookTime;
@@ -77,14 +70,7 @@ public class Recipe {
 		this.image = image;
 		this.ingredients = ingredients;
 		this.notes = notes;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+		this.categories = categories;
 	}
 
 	public String getDescription() {
@@ -142,14 +128,14 @@ public class Recipe {
 	public void setDirections(String directions) {
 		this.directions = directions;
 	}
-	
+
 	public Diffuculty getDiffuculty() {
 		return diffuculty;
 	}
 
 	public void setDiffuculty(Diffuculty diffuculty) {
 		this.diffuculty = diffuculty;
-	} 
+	}
 
 	public Byte[] getImage() {
 		return image;
@@ -183,12 +169,15 @@ public class Recipe {
 		this.categories = categories;
 	}
 
-	@Override
-	public String toString() {
-		return "Recipe [id=" + id + ", description=" + description + ", prepTime=" + prepTime + ", cookTime=" + cookTime
-				+ ", servings=" + servings + ", source=" + source + ", url=" + url + ", directions=" + directions
-				+ ", diffuculty=" + diffuculty + ", image=" + Arrays.toString(image) + ", ingredients=" + ingredients
-				+ ", notes=" + notes + ", categories=" + categories + "]";
+	public void addCategory(Category category) {
+		this.getCategories().add(category);
 	}
-		
+
+	public void addIngredient(Ingredient ingredient) {
+
+		this.getIngredients().add(ingredient);
+	}
+
+
+
 }

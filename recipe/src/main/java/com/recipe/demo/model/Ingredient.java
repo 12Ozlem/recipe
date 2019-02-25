@@ -1,54 +1,43 @@
 package com.recipe.demo.model;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Ingredient {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
-	
+public class Ingredient extends BaseEntity{
+
 	@Lob
 	String description;
 	@Lob
 	BigDecimal amount;
 	
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER, cascade= {CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="recipe_id")
 	Recipe recipe;
 	
-	@OneToOne(fetch=FetchType.EAGER)
-	UnitMeasure unitMeasure;
+	@OneToOne(fetch=FetchType.EAGER, cascade= {CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="unitMeasure_id")
+	UnitMeasure unitMeasure;	
 
-	public Ingredient() {
-
+	public Ingredient() {		
 	}
 
-	public Ingredient(String description, BigDecimal amount, Recipe recipe, UnitMeasure unitMeasure) {
+	public Ingredient(String description, BigDecimal amount, UnitMeasure unitMeasure) {
 		this.description = description;
 		this.amount = amount;
-		this.recipe = recipe;
 		this.unitMeasure = unitMeasure;
-	}
-	
-	
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getDescription() {
@@ -88,5 +77,6 @@ public class Ingredient {
 		return "Ingredient [description=" + description + ", amount=" + amount + ", recipe=" + recipe + ", unitMeasure="
 				+ unitMeasure + "]";
 	}
+
 
 }

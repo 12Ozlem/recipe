@@ -6,4 +6,5 @@ import com.recipe.demo.model.Recipe;
 
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
+
 }

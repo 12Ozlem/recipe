@@ -4,30 +4,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import lombok.Data;
+@Data
 @Entity
-public class Category {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+public class Category extends BaseEntity {
+
 	private String categoryName;
-	
-	@ManyToMany(fetch=FetchType.EAGER, mappedBy="categories")
+
+	@ManyToMany (mappedBy="categories")
 	private Set<Recipe> recipes = new HashSet<>();
 
 	public Category() {
-
 	}
 
-	public Category(String categoryName, Set<Recipe> recipes) {
+	public Category(String categoryName) {
 		this.categoryName = categoryName;
-		this.recipes = recipes;
+
 	}
 
 	public String getCategoryName() {
@@ -44,6 +38,14 @@ public class Category {
 
 	public void setRecipes(Set<Recipe> recipes) {
 		this.recipes = recipes;
-	}	
+	}
+	
+
+	public void addRecipe(Recipe recipe) {
+		this.getRecipes().add(recipe);
+		//this.getRecipes().iterator().forEachRemaining(e ->{
+			//e.getCategories().add(this);
+		//});
+	}
 
 }
